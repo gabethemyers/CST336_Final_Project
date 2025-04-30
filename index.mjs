@@ -11,13 +11,14 @@ app.use(express.urlencoded({extended:true}));
 
 //setting up database connection pool
 const pool = mysql.createPool({
-    host: "your_hostname",
-    user: "your_username",
-    password: "your_password",
-    database: "your_database",
+    host: "migueloros.site",
+    user: "miguelor_webuser",
+    password: "^ta;DW3)V8@$",
+    database: "miguelor_final-project",
     connectionLimit: 10,
     waitForConnections: true
 });
+
 const conn = await pool.getConnection();
 
 //routes
