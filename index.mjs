@@ -20,11 +20,6 @@ const pool = mysql.createPool({
 
 const conn = await pool.getConnection();
 
-//routes
-app.get('/', (req, res) => {
-   res.send('Hello Express app!')
-});
-
 // Home page 
  app.get('/', (req, res) => { 
     res.render('home.ejs'); 
