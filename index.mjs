@@ -23,14 +23,8 @@ const conn = await pool.getConnection();
 
 //routes
 app.get('/', (req, res) => {
-   res.send('Hello Express app!')
+   res.render('home.ejs')
 });
-
-// Home page 
- app.get('/', requireLogin, (req, res) => { 
-    res.render('home.ejs'); 
-});
-
 
 app.get("/dbTest", async(req, res) => {
     let sql = "SELECT CURDATE()";
