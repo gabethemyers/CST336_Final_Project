@@ -48,6 +48,15 @@ app.get('/signUp', (req, res) => {
     res.render('signUp.ejs');
 });
 
+// Signup form submission, takes user to login after successful signup
+app.post('/signUp', async(req, res) => {
+    const { username, password } = req.body;
+    const sql = "INSERT INTO users (username, password) VALUES (?, ?)";
+    await conn.query(sql, [username, password]);
+    res.redirect('/login');
+});
+
+
 app.get("/dbTest", async(req, res) => {
     let sql = "SELECT CURDATE()";
     const [rows] = await conn.query(sql);
