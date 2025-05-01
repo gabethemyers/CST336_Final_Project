@@ -25,6 +25,28 @@ const conn = await pool.getConnection();
     res.render('home.ejs'); 
 });
 
+// Login page
+app.get('/login', (req, res) => {
+    res.render('login.ejs');
+});
+
+// Login form submission
+app.post('/login', async(req, res) => {
+    const { username, password } = req.body;
+    const sql = "SELECT * FROM users WHERE username = ? AND password = ?";
+    const [rows] = await conn.query(sql, [username, password]);
+    if (rows.length > 0) {
+        req.session.user = username;
+        res.redirect('/home');
+    } else {
+        res.redirect('/login');
+    }
+});
+
+// Signup page
+app.get('/signUp', (req, res) => {
+    res.render('signUp.ejs');
+});
 
 app.get("/dbTest", async(req, res) => {
     let sql = "SELECT CURDATE()";
