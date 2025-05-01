@@ -35,11 +35,11 @@ app.post('/login', async(req, res) => {
     const { username, password } = req.body;
     const sql = "SELECT * FROM users WHERE username = ? AND password = ?";
     const [rows] = await conn.query(sql, [username, password]);
+    // if login is valid, takes to landing.ejs. Else goes back to login.ejs and displays error message
     if (rows.length > 0) {
-        req.session.user = username;
-        res.redirect('/home');
+        res.render('landing.ejs');
     } else {
-        res.redirect('/login');
+        res.render('login.ejs', { error: 'Invalid username or password' });
     }
 });
 
