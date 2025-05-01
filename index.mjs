@@ -10,45 +10,33 @@ app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
 
 const pool = mysql.createPool({
-  host: "migueloros.site",
-  user: "miguelor_webuser",
-  password: "^ta;DW3)V8@$",
-  database: "miguelor_final-project",
-  waitForConnections: true,
-  connectionLimit: 10
+    host: "migueloros.site",
+    user: "miguelor_webuser",
+    password: "^ta;DW3)V8@$",
+    database: "miguelor_final-project",
+    connectionLimit: 10,
+    waitForConnections: true
 });
 
-// I put this to check if the user logged in
-function requireLogin(req, res, next) {
-  // check session or JWT here
-  next();
-}
+const conn = await pool.getConnection();
 
-// ——— Routes ———
-
-
-// home page
-app.get('/', requireLogin, (req, res) => {
-  res.render('home.ejs', { title: 'Home' });
+//routes
+app.get('/', (req, res) => {
+   res.send('Hello Express app!')
 });
 
-// DB test
-app.get('/dbTest', async (req, res, next) => {
-  try {
-    const [rows] = await pool.query('SELECT CURDATE() AS today');
-    res.json(rows);
-  } catch (err) {
-    next(err);
-  }
+// Home page 
+ app.get('/', requireLogin, (req, res) => { 
+    res.render('home.ejs'); 
 });
 
-// Error handler
-app.use((err, req, res, next) => {
-  console.error(err);
-  res.status(500).send('Server error');
-});
 
-// start server
+app.get("/dbTest", async(req, res) => {
+    let sql = "SELECT CURDATE()";
+    const [rows] = await conn.query(sql);
+    res.send(rows);
+});//dbTest
+
 app.listen(3000, ()=>{
     console.log("Express server running")
 });
