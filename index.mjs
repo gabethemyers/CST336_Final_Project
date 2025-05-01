@@ -4,12 +4,11 @@ import mysql from 'mysql2/promise';
 const app = express();
 
 app.set('view engine', 'ejs');
+app.set('views', './views');
 app.use(express.static('public'));
 
-//for Express to get values using POST method
-app.use(express.urlencoded({extended:true}));
+app.use(express.urlencoded({ extended: true }));
 
-//setting up database connection pool
 const pool = mysql.createPool({
     host: "migueloros.site",
     user: "miguelor_webuser",
@@ -23,8 +22,14 @@ const conn = await pool.getConnection();
 
 //routes
 app.get('/', (req, res) => {
-   res.render('home.ejs')
+   res.send('Hello Express app!')
 });
+
+// Home page 
+ app.get('/', (req, res) => { 
+    res.render('home.ejs'); 
+});
+
 
 app.get("/dbTest", async(req, res) => {
     let sql = "SELECT CURDATE()";
@@ -34,8 +39,4 @@ app.get("/dbTest", async(req, res) => {
 
 app.listen(3000, ()=>{
     console.log("Express server running")
-})
-
- 
-
- 
+});
