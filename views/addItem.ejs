@@ -1,20 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
+    <%- include('partials/head') %>
 <body>
     <h1>Add Item</h1>
 
     <form action="/addItem" method="POST">
         <input type="text" name="itemName" placeholder="Item Name">
+        <br>
         <input type="text" name="itemDescription" placeholder="Item Description">
-        <input type="text" name="itemPrice" placeholder="Item Price">
+        <br>
+        <input type="number" name="itemPrice" placeholder="Item Price">
+        <br>
         <input type="text" name="itemLink" placeholder="Item Link">
+        <br>
         <input type="text" name="itemImage" placeholder="Item Image URL">
+        <br>
+        <br>
         <button type="submit">Add Item</button>
     </form>
+    <br>
+    <h2 style="text-align: center;">Or</h2>
+    <br>
+    <form action="/viewWishlist">
+        <input type="text" name="findItem" placeholder="Search Up an Item">
+        <button type="submit">Find Items</button>
+    </form>
+
+    <!-- We will will this div up with items and a button to 
+     use JavaScript to fill in the contents above -->
+    <div>
+
+    </div>
+
+    <%- include('partials/footer') %>
 </body>
 </html>

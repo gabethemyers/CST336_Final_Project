@@ -64,6 +64,10 @@ app.post('/addItem', (req, res) => { //take user to wishlist for them to see the
     res.redirect('viewWishlist.ejs');
 });
 
+app.post('/removeItem', (req, res) => { //deletes a selected item from the wishlist
+    res.redirect('viewWishlist.ejs');
+});
+
 //user clicks items in their own wishlist to edit them
 app.get('/editItem', (req, res) => {
     let itemId = req.query.itemId; //needed to know which item to edit
@@ -76,6 +80,12 @@ app.get('/viewWishlist', (req, res) => { //displays all items with matching user
 
 app.get('/friends', (req, res) => { //displays all friends
     res.render('friends.ejs');
+});
+
+
+app.get('/signOut', (req, res) => { //displays all friends
+
+    res.redirect('/');
 });
 
 app.get("/dbTest", async(req, res) => {
