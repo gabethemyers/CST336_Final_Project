@@ -1,5 +1,6 @@
 import express from 'express';
 import mysql from 'mysql2/promise';
+import session from 'express-session';
 
 const app = express();
 
@@ -8,6 +9,13 @@ app.set('views', './views');
 app.use(express.static('public'));
 
 app.use(express.urlencoded({ extended: true }));
+
+app.use(session({
+    secret: "best_group_ever",
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false } 
+}));
 
 const pool = mysql.createPool({
     host: "migueloros.site",
@@ -19,6 +27,14 @@ const pool = mysql.createPool({
 });
 
 const conn = await pool.getConnection();
+
+function isAuthenticated(req, res, next) {
+    if (req.session.user) {
+        next();
+    } else {
+        res.redirect('/');
+    }
+}
 
 // Home page 
  app.get('/', (req, res) => { 
@@ -37,6 +53,7 @@ app.post('/login', async(req, res) => {
     const [rows] = await conn.query(sql, [username, password]);
     // if login is valid, takes to landing.ejs. Else goes back to login.ejs and displays error message
     if (rows.length > 0) {
+        req.session.user = { id: rows[0].userid, username: rows[0].username };
         res.render('landing.ejs');
     } else {
         res.render('login.ejs', { error: 'Invalid username or password' });
@@ -56,35 +73,35 @@ app.post('/signUp', async(req, res) => {
     res.redirect('/login');
 });
 
-app.get('/addItem', (req, res) => {
+app.get('/addItem', isAuthenticated, (req, res) => {
     res.render('addItem.ejs');
 });
 
-app.post('/addItem', (req, res) => { //take user to wishlist for them to see the updated wishlist
+app.post('/addItem', isAuthenticated, (req, res) => { //take user to wishlist for them to see the updated wishlist
     res.redirect('viewWishlist.ejs');
 });
 
-app.post('/removeItem', (req, res) => { //deletes a selected item from the wishlist
+app.post('/removeItem', isAuthenticated, (req, res) => { //deletes a selected item from the wishlist
     res.redirect('viewWishlist.ejs');
 });
 
 //user clicks items in their own wishlist to edit them
-app.get('/editItem', (req, res) => {
+app.get('/editItem', isAuthenticated, (req, res) => {
     let itemId = req.query.itemId; //needed to know which item to edit
     res.render('editItem.ejs');
 });
 
-app.get('/viewWishlist', (req, res) => { //displays all items with matching userId
+app.get('/viewWishlist', isAuthenticated, (req, res) => { //displays all items with matching userId
     res.render('viewWishlist.ejs');
 });
 
-app.get('/friends', (req, res) => { //displays all friends
+app.get('/friends', isAuthenticated, (req, res) => { //displays all friends
     res.render('friends.ejs');
 });
 
 
 app.get('/signOut', (req, res) => { //displays all friends
-
+    req.session.destroy();
     res.redirect('/');
 });
 
