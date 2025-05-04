@@ -56,6 +56,27 @@ app.post('/signUp', async(req, res) => {
     res.redirect('/login');
 });
 
+app.get('/addItem', (req, res) => {
+    res.render('addItem.ejs');
+});
+
+app.post('/addItem', (req, res) => { //take user to wishlist for them to see the updated wishlist
+    res.redirect('viewWishlist.ejs');
+});
+
+//user clicks items in their own wishlist to edit them
+app.get('/editItem', (req, res) => {
+    let itemId = req.query.itemId; //needed to know which item to edit
+    res.render('editItem.ejs');
+});
+
+app.get('/viewWishlist', (req, res) => { //displays all items with matching userId
+    res.render('viewWishlist.ejs');
+});
+
+app.get('/friends', (req, res) => { //displays all friends
+    res.render('friends.ejs');
+});
 
 app.get("/dbTest", async(req, res) => {
     let sql = "SELECT CURDATE()";
