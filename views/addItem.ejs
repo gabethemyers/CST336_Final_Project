@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <%- include('partials/head') %>
-<body>
+<body class="flex-wrapper">
     <h1>Add Item</h1>
 
     <form action="/addItem" method="POST">
@@ -9,11 +9,11 @@
         <br>
         <input type="text" name="itemDescription" placeholder="Item Description">
         <br>
-        <input type="number" name="itemPrice" placeholder="Item Price">
+        <input type="number" step="0.01" name="itemPrice" placeholder="Item Price">
         <br>
-        <input type="text" name="itemLink" placeholder="Item Link">
+        <textarea type="" name="itemLink" placeholder="Item Link"></textarea>
         <br>
-        <input type="text" name="itemImage" placeholder="Item Image URL">
+        <textarea type="text" name="itemImage" placeholder="Item Image URL"></textarea>
         <br>
         <br>
         <button type="submit">Add Item</button>

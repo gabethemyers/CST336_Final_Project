@@ -9,3 +9,18 @@ form {
     align-items: center;
     margin: 20px;
 }
+
+body{
+    background-image: linear-gradient(rgb(194, 194, 194),rgb(131, 131, 131));
+}
+
+.flex-wrapper{
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.footer{
+    margin-top: auto;
+}
