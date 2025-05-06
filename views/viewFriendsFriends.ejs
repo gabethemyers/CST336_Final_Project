@@ -3,25 +3,23 @@
 <%- include('partials/head') %>
 
     <body class="flex-wrapper">
-        <h1>Friends List</h1>
+        <h1><%= viewingFriendUsername %>'s Friends</h1>
 
         <% if (typeof friends !=='undefined' && friends.length> 0) { %>
             <div class="friends-container">
-                <% for (let friend of friends) { %>
+                <% for (let friend_of_friend of friends) { %>
                     <div class="friend-card">
                         <p><b>Username:</b>
-                            <%= friend.username %>
+                            <%= friend_of_friend.username %>
                         </p>
-                        <% if (friend.friendUserId) { %>
-                            <p><a href="/friends/<%= friend.friendUserId %>/list">View <%= friend.username %>'s Friends</a></p>
-                        <% } %>
                     </div>
                 <% } %>
             </div>
-            <% } else { %>
-                <p>You currently have no friends added.</p>
-            <% } %>
-
+        <% } else { %>
+            <p><%= viewingFriendUsername %> has no friends to display.</p>
+        <% } %>
+        <br>
+        <p><a href="/friends">Back to Your Friends List</a></p>
         <%- include('partials/footer') %>
     </body>
 

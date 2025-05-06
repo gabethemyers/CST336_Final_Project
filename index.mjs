@@ -126,17 +126,71 @@ app.get('/viewWishlist', isAuthenticated, async (req, res) => { //displays all i
 });
 
 app.get('/friends', isAuthenticated, async(req, res) => { //displays all friends
-    let selfUserId = req.session.userId;
-    let sql = `SELECT * FROM friends WHERE userid1 = ?
-                UNION
-                SELECT * FROM friends WHERE userid2= ?`;
-    let sqlParams = [userId, userId];
+    let selfUserId = req.session.user.id;
+    let sql = `SELECT u.username, u.userid as friendUserId 
+    FROM friends f
+    JOIN users u ON (u.userid = f.userid1 OR u.userid = f.userid2) AND u.userid != ?
+    WHERE f.userid1 = ? OR f.userid2 = ?`;
+    let sqlParams = [selfUserId, selfUserId, selfUserId];
     const[rows] = await conn.query(sql, sqlParams);
     res.render('friends.ejs',{friends:rows});
 });
 
+app.get('/friends/:friendId/list', isAuthenticated, async(req, res) => { //displays all friends
+    let friendUserId = req.params.friendId;
+    const [userRows] = await conn.query('SELECT username FROM users WHERE userid = ?', [friendUserId]);
+    const friendUsernameToDisplay = userRows[0].username;
+
+    let friendsSql = `SELECT u.username, u.userid as friend_user_id
+    FROM friends f
+    JOIN users u ON (u.userid = f.userid1 OR u.userid = f.userid2) AND u.userid != ?
+    WHERE (f.userid1 = ? OR f.userid2 = ?)`;
+    let friendsSqlParams = [friendUserId, friendUserId, friendUserId]; 
+    const [rows] = await conn.query(friendsSql, friendsSqlParams);
+    res.render('viewFriendsFriends.ejs', {
+        viewingFriendUsername: friendUsernameToDisplay,
+        friends: rows, 
+    });
+});
+
+app.get('/addFriend', isAuthenticated, async(req, res) => { //displays all friends
+    res.render('addFriend.ejs');
+});
+
+app.post('/addFriend', isAuthenticated, async(req, res) => { //displays all friends
+    let currentUserId = req.session.user.id;
+    let friendUsername = req.body.friendUsername;
+   
+    const sql = `SELECT userid, username FROM users WHERE username = ?`;
+    const sqlParams = [friendUsername];
+    const [rows] = await conn.query(sql, sqlParams);
+
+    if (rows.length > 0) {
+        let friendUserId = rows[0].userid;
+
+        // Check if the friend already exists in the friends table
+        const checkSql = `SELECT * FROM friends WHERE (userid1 = ? AND userid2 = ?) OR (userid1 = ? AND userid2 = ?)`;
+        const checkParams = [currentUserId, friendUserId, friendUserId, currentUserId];
+        const [checkRows] = await conn.query(checkSql, checkParams);
+
+        if (checkRows.length > 0) {
+            return res.render('addFriend.ejs', { error: 'Friend already exists!' });
+        } else if (currentUserId === friendUserId) {
+            return res.render('addFriend.ejs', { error: 'You cannot add yourself as a friend!' });
+        } else {
+            let sql = `INSERT INTO friends (userid1, userid2) VALUES (?, ?)`;
+            let sqlParams = [currentUserId, friendUserId];
+            await conn.query(sql, sqlParams);
+            res.render('addFriend.ejs', { success: 'Successfully added friend!' });
+        }
+    }
+    else {
+        res.render('addFriend.ejs', { error: 'User not found' });
+    }
+});
+
 app.get('/friendsWishlist', isAuthenticated, async(req, res) => { //displays all friends
-    let friendUserId = req.body.friendUserId;
+    let friendUsername = req.body.friendUserId;
     let sql = `SELECT * FROM items WHERE userId = ?`;
     let sqlParams = [friendUserId];
     const[rows] = await conn.query(sql, sqlParams);
