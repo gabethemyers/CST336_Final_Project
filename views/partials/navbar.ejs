@@ -1,0 +1,16 @@
+<% if (userId) { %>
+    <nav class="nav-bar">
+      <a href="/landing">Hub</a>
+      <a href="/wishlist">Wishlist</a>
+      <a href="/friendList">Friends</a>
+      <form action="/logout" method="post" class="nav-logout">
+        <button type="submit">Log Out</button>
+      </form>
+    </nav>
+  <% } else { %>
+    <nav class="nav-bar">
+      <a href="/login">Log In</a>
+      <a href="/register">Sign Up</a>
+    </nav>
+  <% } %>
+  
