@@ -43,6 +43,7 @@ async function fetchProducts() {
                         console.log(event.target);
                         console.log("Autofilled!");
                         
+                        
                         document.querySelector("#itemName").value = event.target.getAttribute("dataname");
                         document.querySelector("#itemPrice").value = event.target.getAttribute("dataprice");
                         document.querySelector("#itemImage").value = event.target.getAttribute("dataimage");
