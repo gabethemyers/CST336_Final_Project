@@ -9,6 +9,8 @@ async function fetchProducts() {
         let keyword = document.querySelector("#findItem").value;
         console.log(keyword);
         
+
+        
         for(let key in data){
             // for(let keyword in keywords){
 
