@@ -5,15 +5,15 @@
     <h1>Add Item</h1>
 
     <form action="/addItem" method="POST">
-        <input type="text" name="itemName" placeholder="Item Name">
+        <input type="text" name="itemName" id="itemName" placeholder="Item Name">
         <br>
-        <input type="text" name="itemDescription" placeholder="Item Description">
+        <!-- <input type="text" name="itemDescription" id="" placeholder="Item Description">
+        <br> -->
+        <input type="number" step="0.01" name="itemPrice" id="itemPrice" placeholder="Item Price">
         <br>
-        <input type="number" step="0.01" name="itemPrice" placeholder="Item Price">
+        <textarea type="text" name="itemLink" id="itemLink" placeholder="Item Link"></textarea>
         <br>
-        <textarea type="" name="itemLink" placeholder="Item Link"></textarea>
-        <br>
-        <textarea type="text" name="itemImage" placeholder="Item Image URL"></textarea>
+        <textarea type="text" name="itemImage" id = "itemImage" placeholder="Item Image URL"></textarea>
         <br>
         <br>
         <button type="submit">Add Item</button>
@@ -21,17 +21,18 @@
     <br>
     <h2 style="text-align: center;">Or</h2>
     <br>
-    <form action="/viewWishlist">
-        <input type="text" name="findItem" placeholder="Search Up an Item">
-        <button type="submit">Find Items</button>
-    </form>
+    <div style="text-align: center;">
+        <input type="text" id="findItem" placeholder="Search Up an Item">
+        <button id="findItemButton">Find Items</button>
+    </div>
 
     <!-- We will will this div up with items and a button to 
      use JavaScript to fill in the contents above -->
-    <div>
+    <div id="items">
 
     </div>
 
     <%- include('partials/footer') %>
+    <script src="js/script.js"></script>
 </body>
 </html>
