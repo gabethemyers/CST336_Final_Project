@@ -83,16 +83,19 @@ app.post('/addItem', isAuthenticated, async (req, res) => { //take user to wishl
     let itemPrice = req.body.itemPrice;
     let itemLink = req.body.itemLink;
     let itemImg = req.body.itemImage;
+    let userid = req.session.id;
+
+    // console.log(req.session);
 
     let sql = `INSERT INTO items
-                (name, price, link, imageurl, userId)
+                (name, price, link, imageurl, userid)
                 VALUES
-                (?,?,?,?,?,?)`;
-    let sqlParams = [itemName,itemPrice,itemLink,itemImg,userId];
+                (?,?,?,?,?)`;
+    let sqlParams = [itemName,itemPrice,itemLink,itemImg,userid];
     const[rows] = await conn.query(sql, sqlParams);
 
     console.log(itemName + " " + itemDesc + " " + itemLink + " " + itemPrice + " " + itemImg);
-    res.redirect('viewWishlist.ejs');
+    res.redirect('/viewWishlist');
 });
 
 app.post('/removeItem', isAuthenticated, async (req, res) => { //deletes a selected item from the wishlist
@@ -130,9 +133,22 @@ app.get('/friends', isAuthenticated, async(req, res) => { //displays all friends
     let sql = `SELECT * FROM friends WHERE userid1 = ?
                 UNION
                 SELECT * FROM friends WHERE userid2= ?`;
-    let sqlParams = [userId, userId];
+    let sqlParams = [selfUserId, selfUserId];
     const[rows] = await conn.query(sql, sqlParams);
     res.render('friends.ejs',{friends:rows});
+});
+
+app.get('/addFriend', isAuthenticated, async(req, res) => { //displays all friends
+    res.render('addFriend.ejs');
+});
+
+app.post('/addFriend', isAuthenticated, async(req, res) => { //displays all friends
+    let selfUserId = req.session.userId;
+    let friendId = req.body.friendId;
+    let sql = `UPDATE friends SET userid1 = ?, userid2 = ?`;
+    let sqlParams = [selfUserId, friendId];
+    const[rows] = await conn.query(sql, sqlParams);
+    res.redirect('addFriend.ejs');
 });
 
 app.get('/friendsWishlist', isAuthenticated, async(req, res) => { //displays all friends
