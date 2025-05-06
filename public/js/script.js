@@ -32,11 +32,24 @@ async function fetchProducts() {
                     newItem.textContent = (data[key]["title"] + " + $" + data[key]["price"]);
                     newItem.appendChild(document.createElement("br"));
                     newItem.appendChild(newImage);
-
-                    // newButton = document.createElement("button");
-                    // newButton.setAttribute("")
-                    // newItem.appendChild(document.createElement(""));
-
+                    
+                    newButton = document.createElement("button");
+                    newButton.textContent = "AutoFill";
+                    newButton.setAttribute("dataKey", key);
+                    newButton.setAttribute("dataName", data[key]["title"]);
+                    newButton.setAttribute("dataImage", data[key]["image"]);
+                    newButton.setAttribute("dataPrice", data[key]["price"]);
+                    newButton.addEventListener("click", function(event){
+                        console.log(event.target);
+                        console.log("Autofilled!");
+                        
+                        document.querySelector("#itemName").value = event.target.getAttribute("dataname");
+                        document.querySelector("#itemPrice").value = event.target.getAttribute("dataprice");
+                        document.querySelector("#itemImage").value = event.target.getAttribute("dataimage");
+                        document.querySelector("#itemLink").value = event.target.getAttribute("datalink");
+                    });
+                    newItem.appendChild(document.createElement("br"));
+                    newItem.appendChild(newButton);
                     document.querySelector("#items").appendChild(newItem);
                     document.querySelector("#items").appendChild(document.createElement("hr"));
                     // break;

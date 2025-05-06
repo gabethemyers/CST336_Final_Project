@@ -51,9 +51,11 @@ app.post('/login', async(req, res) => {
     const { username, password } = req.body;
     const sql = "SELECT * FROM users WHERE username = ? AND password = ?";
     const [rows] = await conn.query(sql, [username, password]);
+    console.log(rows);
     // if login is valid, takes to landing.ejs. Else goes back to login.ejs and displays error message
     if (rows.length > 0) {
         req.session.user = { id: rows[0].userid, username: rows[0].username };
+        console.log(req.session.user);
         res.render('landing.ejs');
     } else {
         res.render('login.ejs', { error: 'Invalid username or password' });
@@ -83,7 +85,7 @@ app.post('/addItem', isAuthenticated, async (req, res) => { //take user to wishl
     let itemPrice = req.body.itemPrice;
     let itemLink = req.body.itemLink;
     let itemImg = req.body.itemImage;
-    let userid = req.session.id;
+    let userid = req.session.user.id;
 
     // console.log(req.session);
 
