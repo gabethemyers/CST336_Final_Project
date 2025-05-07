@@ -15,6 +15,9 @@
                         <% if (friend.friendUserId) { %>
                             <p><a href="/friends/<%= friend.friendUserId %>/list">View <%= friend.username %>'s Friends</a></p>
                         <% } %>
+                        <form action="/viewFriendsWishlist">
+                            <input type="hidden" name="friendId" value="<%= friend.friendUserId %>">
+                            <button type="submit">View Friend's Wishlist</button>
                     </div>
                 <% } %>
             </div>

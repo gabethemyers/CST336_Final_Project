@@ -5,6 +5,21 @@
     <!-- Replace Friends with the username of the friend -->
     <h1>Friends Wishlist</h1>
     
+    <div class="item" >
+        <% for (let i = 0; i < Object.keys(items).length; i++) {%>
+            <h2><%= items[i].name %></h2>
+            <p>Price: $<%= items[i].price %></p>
+            <img src="<%= items[i].imageurl %>" style="width: 100px; height: 100px;"alt="Item Image"></img>
+            <a href="<$= items[i].link %>" >Link</a>
+            <!-- <% if (items[i].markedUserId && ownUserId != items[i].mark) { %>
+                <p>This item has been marked.</p> -->
+            <p>Debug <%= items[i].markedUserId%> </p>
+            <form action="/markItem" method="POST">
+                <input type="hidden" name="itemId" value="<%= items[i].itemId %>">
+                <button type="submit">Mark Item</button>
+            </form>
+        <% } %>
+    </div>
 
     <%- include('partials/footer') %>
 </body>

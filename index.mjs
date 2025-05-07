@@ -79,15 +79,16 @@ app.get('/addItem', isAuthenticated, (req, res) => {
 
 app.post('/addItem', isAuthenticated, async (req, res) => { //take user to wishlist for them to see the updated wishlist
     let itemName = req.body.itemName;
-    let itemDesc = req.body.itemDescription;
+    //let itemDesc = req.body.itemDescription;
     let itemPrice = req.body.itemPrice;
     let itemLink = req.body.itemLink;
     let itemImg = req.body.itemImage;
+    let userId = req.session.user.id;
 
     let sql = `INSERT INTO items
                 (name, price, link, imageurl, userId)
                 VALUES
-                (?,?,?,?,?,?)`;
+                (?,?,?,?,?)`;
     let sqlParams = [itemName,itemPrice,itemLink,itemImg,userId];
     const[rows] = await conn.query(sql, sqlParams);
 
@@ -102,7 +103,7 @@ app.post('/removeItem', isAuthenticated, async (req, res) => { //deletes a selec
     let sqlParams = [itemId];
     const[rows] = await conn.query(sql, sqlParams);
     console.log("Deleted: " + itemId);
-    res.redirect('viewWishlist.ejs');
+    res.redirect('/viewWishlist');
 });
 
 //user clicks items in their own wishlist to edit them
@@ -117,11 +118,11 @@ app.get('/editItem', isAuthenticated, async(req, res) => {
 });
 
 app.get('/viewWishlist', isAuthenticated, async (req, res) => { //displays all items with matching userId
-    let selfUserId = req.session.userId;
+    let selfUserId = req.session.user.id;
     let sql = `SELECT itemId, name, price, imageurl, link FROM items WHERE userId = ?`;
     let sqlParams = [selfUserId];
     const[rows] = await conn.query(sql, sqlParams);
-    
+    console.log(rows);
     res.render('viewWishlist.ejs',{items: rows});
 });
 
@@ -133,6 +134,7 @@ app.get('/friends', isAuthenticated, async(req, res) => { //displays all friends
     WHERE f.userid1 = ? OR f.userid2 = ?`;
     let sqlParams = [selfUserId, selfUserId, selfUserId];
     const[rows] = await conn.query(sql, sqlParams);
+    console.log(rows);
     res.render('friends.ejs',{friends:rows});
 });
 
@@ -189,12 +191,13 @@ app.post('/addFriend', isAuthenticated, async(req, res) => { //displays all frie
     }
 });
 
-app.get('/friendsWishlist', isAuthenticated, async(req, res) => { //displays all friends
-    let friendUsername = req.body.friendUserId;
+app.get('/viewFriendsWishlist', isAuthenticated, async(req, res) => { //displays all friends
+    let friendUserId = req.query.friendUserId;
+    console.log("Friend ID Retrieved: " + friendUserId);
     let sql = `SELECT * FROM items WHERE userId = ?`;
     let sqlParams = [friendUserId];
     const[rows] = await conn.query(sql, sqlParams);
-    res.render('friends.ejs',{friends:rows});
+    res.render('friends.ejs',{friends:rows, ownUserId: req.session.user.id});
 });
 
 app.get('/signOut', (req, res) => { //displays all friends
