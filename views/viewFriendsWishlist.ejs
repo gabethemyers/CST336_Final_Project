@@ -11,8 +11,7 @@
             <p>Price: $<%= items[i].price %></p>
             <img src="<%= items[i].imageurl %>" style="width: 100px; height: 100px;"alt="Item Image"></img>
             <a href="<$= items[i].link %>" >Link</a>
-            <!-- <% if (items[i].markedUserId && ownUserId != items[i].mark) { %>
-                <p>This item has been marked.</p> -->
+
             <p>Debug <%= items[i].markedUserId%> </p>
             <form action="/markItem" method="POST">
                 <input type="hidden" name="itemId" value="<%= items[i].itemId %>">
@@ -21,6 +20,9 @@
         <% } %>
     </div>
 
+
+                <!-- <% if (items[i].markedUserId && ownUserId != items[i].mark) { %>
+                <p>This item has been marked.</p> -->
     <%- include('partials/footer') %>
 </body>
 </html>

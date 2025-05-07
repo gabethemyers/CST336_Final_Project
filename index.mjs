@@ -107,15 +107,15 @@ app.post('/removeItem', isAuthenticated, async (req, res) => { //deletes a selec
 });
 
 //user clicks items in their own wishlist to edit them
-app.get('/editItem', isAuthenticated, async(req, res) => {
-    let itemId = req.query.itemId; //needed to know which item to edit
-    let sql = `SELECT * FROM items WHERE itemId = ?`;
-    let sqlParams = [itemId];
-    const[rows] = await conn.query(sql, sqlParams);
+// app.get('/editItem', isAuthenticated, async(req, res) => {
+//     let itemId = req.query.itemId; //needed to know which item to edit
+//     let sql = `SELECT * FROM items WHERE itemId = ?`;
+//     let sqlParams = [itemId];
+//     const[rows] = await conn.query(sql, sqlParams);
 
 
-    res.render('editItem.ejs',{itemDetails:rows});
-});
+//     res.render('editItem.ejs',{itemDetails:rows});
+// });
 
 app.get('/viewWishlist', isAuthenticated, async (req, res) => { //displays all items with matching userId
     let selfUserId = req.session.user.id;
@@ -192,12 +192,14 @@ app.post('/addFriend', isAuthenticated, async(req, res) => { //displays all frie
 });
 
 app.get('/viewFriendsWishlist', isAuthenticated, async(req, res) => { //displays all friends
-    let friendUserId = req.query.friendUserId;
-    console.log("Friend ID Retrieved: " + friendUserId);
+    let friendUserId = req.query.friendId;
+    // console.log("Friend ID Retrieved: " + friendUserId);
     let sql = `SELECT * FROM items WHERE userId = ?`;
     let sqlParams = [friendUserId];
     const[rows] = await conn.query(sql, sqlParams);
-    res.render('friends.ejs',{friends:rows, ownUserId: req.session.user.id});
+    //let ownUserId = req.session.user.id;
+
+    res.render('viewFriendsWishlist.ejs',{items:rows});
 });
 
 app.get('/signOut', (req, res) => { //displays all friends
