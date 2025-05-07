@@ -92,8 +92,8 @@ app.post('/addItem', isAuthenticated, async (req, res) => { //take user to wishl
     let sqlParams = [itemName,itemPrice,itemLink,itemImg,userId];
     const[rows] = await conn.query(sql, sqlParams);
 
-    console.log(itemName + " " + itemDesc + " " + itemLink + " " + itemPrice + " " + itemImg);
-    res.redirect('viewWishlist.ejs');
+    //console.log(itemName + " " + itemDesc + " " + itemLink + " " + itemPrice + " " + itemImg);
+    res.redirect('/viewWishlist');
 });
 
 app.post('/removeItem', isAuthenticated, async (req, res) => { //deletes a selected item from the wishlist
@@ -191,15 +191,31 @@ app.post('/addFriend', isAuthenticated, async(req, res) => { //displays all frie
     }
 });
 
-app.get('/viewFriendsWishlist', isAuthenticated, async(req, res) => { //displays all friends
+app.get('/friendsWishlist', isAuthenticated, async(req, res) => { //displays all friends
     let friendUserId = req.query.friendId;
-    // console.log("Friend ID Retrieved: " + friendUserId);
+    console.log("Friend ID Retrieved: " + friendUserId);
     let sql = `SELECT * FROM items WHERE userId = ?`;
     let sqlParams = [friendUserId];
     const[rows] = await conn.query(sql, sqlParams);
-    //let ownUserId = req.session.user.id;
+    let ownUserId = req.session.user.id;
+    console.log(rows);
+    res.render('friendsWishlist.ejs',{items: rows, ownUserId: ownUserId, friendUserId: friendUserId});
+});
 
-    res.render('viewFriendsWishlist.ejs',{items:rows});
+app.post('/markItem', isAuthenticated, async(req, res) => { //displays all friends
+    let itemId = req.body.itemId;
+    let userId = req.session.user.id;
+    console.log("user ID Retrieved: " + userId);
+    let friendUserId = req.body.friendUserId; 
+    let sql2 = `UPDATE items SET markedUserId = ? WHERE itemId = ?`;
+    let sqlParams2 = [userId, itemId];
+    const[rows2] = await conn.query(sql2, sqlParams2);
+
+    let sql = `SELECT * FROM items WHERE userId = ?`;
+    let sqlParams = [friendUserId];
+    const[rows] = await conn.query(sql, sqlParams);
+    console.log(rows);
+    res.render('friendsWishlist.ejs',{items: rows, ownUserId: userId, friendUserId: friendUserId});
 });
 
 app.get('/signOut', (req, res) => { //displays all friends
